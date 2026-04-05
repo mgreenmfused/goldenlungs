@@ -87,7 +87,7 @@ input[type="range"]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;b
 <div id="modal"></div>
 <div id="toast"></div>
 <script>
-var SHEETS_URL="https://script.google.com/macros/s/AKfycbxgUb8cenw88c0f4tAR5Moh3TaR5sUHaam_NmZ9rhFjvGOsucnXGKmrwiET-PrTAskd";
+var SHEETS_URL="https://script.google.com/macros/s/AKfycbxuGT0UksBSdeSutQDACWwoW1MsWYMgcp_76HBue57CoO5w1479tLIsCwXaC82HvupF";
 
 // 7 draw configs: 3 at LV1, 3 at LV2, 1 KO
 var DRAWS={
@@ -299,7 +299,7 @@ function bRow(){
 async function sub(){
   var row=bRow();
   var bk=JSON.parse(localStorage.getItem("gl_bk")||"[]");bk.push(row);localStorage.setItem("gl_bk",JSON.stringify(bk));
-  if(SHEETS_URL!=="AKfycbxgUb8cenw88c0f4tAR5Moh3TaR5sUHaam_NmZ9rhFjvGOsucnXGKmrwiET-PrTAskd"){
+  if(SHEETS_URL!=="AKfycbxuGT0UksBSdeSutQDACWwoW1MsWYMgcp_76HBue57CoO5w1479tLIsCwXaC82HvupF"){
     try{
       var iframe=document.getElementById("gframe");
       if(!iframe){iframe=document.createElement("iframe");iframe.id="gframe";iframe.name="gframe";iframe.style.display="none";document.body.appendChild(iframe)}
