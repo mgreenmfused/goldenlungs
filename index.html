@@ -87,7 +87,7 @@ input[type="range"]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;b
 <div id="modal"></div>
 <div id="toast"></div>
 <script>
-var SHEETS_URL="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec";
+var SHEETS_URL="https://script.google.com/macros/s/AKfycbxSSmUmD43EDPeIbrxN5nIj5Tl_fv30Up6B6x03i5072y7MCebN91XjWbHy18-mRFvC/exec";
 
 // 7 draw configs: 3 at LV1, 3 at LV2, 1 KO
 var DRAWS={
@@ -299,16 +299,15 @@ function bRow(){
 async function sub(){
   var row=bRow();
   var bk=JSON.parse(localStorage.getItem("gl_bk")||"[]");bk.push(row);localStorage.setItem("gl_bk",JSON.stringify(bk));
-  if(SHEETS_URL!=="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec"){
+  if(SHEETS_URL!=="https://script.google.com/macros/s/AKfycbxSSmUmD43EDPeIbrxN5nIj5Tl_fv30Up6B6x03i5072y7MCebN91XjWbHy18-mRFvC/exec"){
     try{
-      var sent=false;
-      try{
-        await fetch(SHEETS_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({row:row}),redirect:"follow"});
-        sent=true;
-      }catch(e1){
-        try{navigator.sendBeacon(SHEETS_URL,JSON.stringify({row:row}));sent=true}catch(e2){}
-      }
-      S.ss=sent?"ok":"error";
+      var iframe=document.getElementById("gframe");
+      if(!iframe){iframe=document.createElement("iframe");iframe.id="gframe";iframe.name="gframe";iframe.style.display="none";document.body.appendChild(iframe)}
+      var form=document.createElement("form");
+      form.method="POST";form.action=SHEETS_URL;form.target="gframe";
+      var input=document.createElement("input");input.type="hidden";input.name="data";input.value=JSON.stringify({row:row});
+      form.appendChild(input);document.body.appendChild(form);form.submit();document.body.removeChild(form);
+      S.ss="ok";
     }catch(e){S.ss="error"}
   }else{S.ss="offline"}
   lc++;localStorage.setItem("glc",lc);clearP();S.step=STEPS.length-1;R();scrollTo(0,0);
@@ -526,3 +525,4 @@ R();
 </script>
 </body>
 </html>
+
