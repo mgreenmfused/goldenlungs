@@ -87,7 +87,7 @@ input[type="range"]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;b
 <div id="modal"></div>
 <div id="toast"></div>
 <script>
-var SHEETS_URL="YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+var SHEETS_URL="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec";
 
 // 7 draw configs: 3 at LV1, 3 at LV2, 1 KO
 var DRAWS={
@@ -299,7 +299,7 @@ function bRow(){
 async function sub(){
   var row=bRow();
   var bk=JSON.parse(localStorage.getItem("gl_bk")||"[]");bk.push(row);localStorage.setItem("gl_bk",JSON.stringify(bk));
-  if(SHEETS_URL!=="YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"){
+  if(SHEETS_URL!=="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec"){
     try{
       var sent=false;
       try{
