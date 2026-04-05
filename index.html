@@ -303,7 +303,7 @@ async function sub(){
     try{
       var iframe=document.getElementById("gframe");
       if(!iframe){iframe=document.createElement("iframe");iframe.id="gframe";iframe.name="gframe";iframe.style.display="none";document.body.appendChild(iframe)}
-      var img=new Image();img.src=SHEETS_URL+"?data="+encodeURIComponent(JSON.stringify({row:row}));
+      var iframe=document.getElementById("gframe");if(!iframe){iframe=document.createElement("iframe");iframe.id="gframe";iframe.name="gframe";iframe.style.display="none";document.body.appendChild(iframe)}iframe.src=SHEETS_URL+"?data="+encodeURIComponent(JSON.stringify({row:row}));
       S.ss="ok";
     }catch(e){S.ss="error"}
   }else{S.ss="offline"}
