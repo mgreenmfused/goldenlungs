@@ -303,10 +303,7 @@ async function sub(){
     try{
       var iframe=document.getElementById("gframe");
       if(!iframe){iframe=document.createElement("iframe");iframe.id="gframe";iframe.name="gframe";iframe.style.display="none";document.body.appendChild(iframe)}
-      var form=document.createElement("form");
-      form.method="POST";form.action=SHEETS_URL;form.target="gframe";
-      var input=document.createElement("input");input.type="hidden";input.name="data";input.value=JSON.stringify({row:row});
-      form.appendChild(input);document.body.appendChild(form);form.submit();document.body.removeChild(form);
+      var img=new Image();img.src=SHEETS_URL+"?data="+encodeURIComponent(JSON.stringify({row:row}));
       S.ss="ok";
     }catch(e){S.ss="error"}
   }else{S.ss="offline"}
