@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Golden Lungs — MFUSED</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B3A5C;--accent:#2E75B6;--light:#E8F0F8;--bg:#F7F9FB;--green:#27AE60;--red:#C0392B;--orange:#E67E22;--gold:#D4A017;--blue:#3498DB;--yellow:#F1C40F}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:"DM Sans","Segoe UI",sans-serif;background:var(--bg);color:#222}
+.app{max-width:480px;margin:0 auto;min-height:100vh}
+.hdr{background:var(--navy);padding:14px 16px;color:#fff;position:sticky;top:0;z-index:10}
+.hdr h1{font-size:18px;font-weight:800;letter-spacing:.5px}
+.hdr .sub{font-size:11px;opacity:.6;margin-top:1px}
+.hdr .ctx{font-size:11px;font-weight:600;margin-top:6px;padding:4px 10px;background:rgba(255,255,255,.15);border-radius:12px;display:inline-block}
+.prog{margin-top:8px;height:3px;background:rgba(255,255,255,.15);border-radius:2px}
+.prog div{height:100%;background:#fff;border-radius:2px;transition:width .3s}
+.ct{padding:14px 12px 90px}
+.card{background:#fff;border-radius:12px;padding:18px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card h2{font-size:17px;color:var(--navy);margin-bottom:4px}
+.card h3{font-size:15px;color:var(--accent);margin:14px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--light)}
+.hint{font-size:12px;color:#999;margin-bottom:14px}
+.draw-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:14px;font-weight:700;margin-bottom:10px}
+.mode-badge{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-left:8px}
+.draw-inst{font-size:14px;line-height:1.5;color:#444;margin-bottom:14px;padding:12px;background:var(--light);border-radius:8px;border-left:4px solid var(--accent)}
+.lbl{display:block;font-size:12px;font-weight:600;color:#666;margin:6px 0 3px}
+input[type="text"],input[type="number"],textarea{width:100%;padding:10px;font-size:14px;border:1px solid #ddd;border-radius:8px;margin-bottom:8px;font-family:inherit;background:#fff;-webkit-appearance:none}
+textarea{height:50px;resize:none}
+.pills{margin-bottom:8px;display:flex;flex-wrap:wrap;gap:5px}
+.pill{padding:7px 12px;border-radius:18px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid #ddd;background:#fff;color:#444;transition:all .12s;user-select:none}
+.pill.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.sg{margin-bottom:18px}
+.sg .sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.sg .sn{font-weight:700;font-size:13px;color:var(--navy)}
+.sg .sv{font-size:12px;color:var(--accent);font-weight:600;min-width:30px;text-align:right}
+.sg .sw{height:36px;display:flex;align-items:center}
+input[type="range"]{width:100%;height:6px;-webkit-appearance:none;appearance:none;border-radius:3px;outline:none;cursor:pointer;background:#ddd}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--navy);border:3px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type="range"]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--navy);border:none;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sa{display:flex;justify-content:space-between;font-size:10px;color:#aaa;margin-top:1px}
+.di{display:flex;align-items:center;padding:9px 10px;margin-bottom:4px;border-radius:6px;cursor:pointer;background:#f9f9f9;border:1.5px solid #eee;user-select:none;font-size:13px}
+.di.on{background:#FDE8E8;border-color:var(--red)}
+.dk{width:20px;height:20px;border-radius:3px;border:2px solid #ccc;margin-right:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:#fff;color:#fff;flex-shrink:0}
+.di.on .dk{background:var(--red);border-color:var(--red)}
+.di.on span{font-weight:700;color:var(--red)}
+.rr{display:flex;align-items:center;margin-bottom:8px;gap:8px}
+.rn{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:10px 12px;box-shadow:0 -2px 8px rgba(0,0,0,.08);display:flex;gap:8px;max-width:480px;margin:0 auto;z-index:10}
+.btn{flex:1;padding:13px;font-size:15px;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-family:inherit}
+.btn-p{background:var(--navy);color:#fff;flex:2}.btn-p:disabled{background:#ccc}
+.btn-b{background:#eee;color:#666}.btn-s{background:var(--green);color:#fff;flex:2}
+.btn-pause{background:#fff;color:var(--accent);border:2px solid var(--accent);font-size:12px;padding:10px 12px;flex:none}
+.timer-box{text-align:center;padding:20px;background:var(--light);border-radius:12px;margin-bottom:14px}
+.timer-big{font-size:56px;font-weight:800;color:var(--navy);line-height:1}
+.timer-ph{font-size:18px;font-weight:700;margin-top:4px}
+.timer-bar{margin-top:8px;height:8px;background:#ddd;border-radius:4px;overflow:hidden}
+.timer-fill{height:100%;border-radius:4px}
+.rest-box{text-align:center;padding:24px;background:#FFF8E1;border:2px solid var(--gold);border-radius:12px;margin-bottom:14px}
+.rest-big{font-size:48px;font-weight:800;color:var(--gold);line-height:1}
+.rest-inst{font-size:14px;color:#666;margin-top:10px;line-height:1.5}
+.mode-sw{text-align:center;padding:24px;background:var(--light);border:2px solid var(--accent);border-radius:12px;margin-bottom:14px}
+.mode-sw h2{font-size:20px;margin-bottom:8px}
+.sts{text-align:center;padding:10px;border-radius:8px;font-size:13px;font-weight:600;margin-top:10px}
+.sts-ok{background:#E8F8EE;color:var(--green)}.sts-err{background:#FDE8E8;color:var(--red)}
+.sep{height:1px;background:#eee;margin:14px 0}
+.resume-bar{background:#FFF8E1;border:1.5px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:14px;text-align:center}
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:14px;padding:20px 18px;max-width:400px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.modal h3{font-size:16px;color:var(--navy);margin-bottom:4px}
+.modal .mhint{font-size:12px;color:#999;margin-bottom:12px}
+.modal .mpill{display:inline-block;padding:8px 12px;border-radius:18px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid #ddd;background:#fff;color:#444;margin:3px;user-select:none}
+.modal .mpill.on{border-color:var(--red);background:var(--red);color:#fff}
+.modal textarea{width:100%;padding:8px;font-size:13px;border:1px solid #ddd;border-radius:6px;height:40px;resize:none;font-family:inherit;margin-top:6px}
+.modal .mbtn{width:100%;padding:12px;font-size:15px;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin-top:10px;background:var(--navy);color:#fff;font-family:inherit}
+.saved-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:fadeout 2.5s forwards}
+@keyframes fadeout{0%,60%{opacity:1}100%{opacity:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr"><h1>GOLDEN LUNGS</h1><div class="sub">MFUSED Sensory Evaluation v3</div><div id="hctx"></div><div class="prog" id="pbar"><div id="pfill" style="width:0%"></div></div></div>
+<div class="ct" id="ct"></div>
+<div class="nav" id="nav"></div>
+</div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script>
+var SHEETS_URL="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec";
+
+// 7 draw configs: 3 at LV1, 3 at LV2, 1 KO
+var DRAWS={
+  lv1_sip:{id:"lv1_sip",mode:"LV1",type:"Sip",sec:2,color:"var(--blue)",modeBg:"#3498DB",inst:"Take 3-4 quick sips in a row at LV1 (2.7V) - like hitting a joint. Short, gentle puffs. Score the overall experience across all sips."},
+  lv1_std:{id:"lv1_std",mode:"LV1",type:"Standard",sec:5,color:"var(--blue)",modeBg:"#3498DB",inst:"Take a normal 5-second draw at LV1. Steady, natural pace. Notice flavor, vapor density, and throat feel."},
+  lv1_heavy:{id:"lv1_heavy",mode:"LV1",type:"Heavy Hit",sec:7,color:"var(--blue)",modeBg:"#3498DB",inst:"Take a deep 7-second draw at LV1. Pull steadily. Does the flavor hold or change toward the end?"},
+  lv2_sip:{id:"lv2_sip",mode:"LV2",type:"Sip",sec:2,color:"var(--yellow)",modeBg:"#F1C40F",inst:"Take 3-4 quick sips in a row at LV2 (3.2V) - same as before, short quick puffs. Compare to how LV1 sips felt."},
+  lv2_std:{id:"lv2_std",mode:"LV2",type:"Standard",sec:5,color:"var(--yellow)",modeBg:"#F1C40F",inst:"Take a 5-second draw at LV2. More power now. Notice the difference in vapor density and throat hit vs LV1."},
+  lv2_heavy:{id:"lv2_heavy",mode:"LV2",type:"Heavy Hit",sec:7,color:"var(--yellow)",modeBg:"#F1C40F",inst:"Take a deep 7-second draw at LV2. Does the extra power help or hurt the flavor at this duration?"},
+  ko:{id:"ko",mode:"KO",type:"Kore Draw",sec:15,color:"var(--gold)",modeBg:"#D4A017",inst:"Full Kore Optimization draw. Try to go the full 15 seconds, but STOP whenever you hit your limit - that is totally fine. Note the second you stopped. Watch how the flavor changes across the draw."}
+};
+
+var ATTRS=[
+  {id:"onset",l:"Flavor Onset",lo:"Delayed",hi:"Immediate"},
+  {id:"clarity",l:"Flavor Clarity",lo:"Muddled",hi:"Crystal clear"},
+  {id:"intensity",l:"Flavor Intensity",lo:"Barely there",hi:"Very strong"},
+  {id:"complexity",l:"Flavor Complexity",lo:"Flat, one note",hi:"Layered, evolving"},
+  {id:"offnotes",l:"Off-Notes",lo:"None",hi:"Strong burnt/metallic/chemical",inv:true,trigger:{thresh:8,dir:"above",q:"What kind of off-note?",opts:["Burnt","Metallic","Chemical/plastic","Earthy/musty","Bitter","Other"]}},
+  {id:"vapor",l:"Vapor Density",lo:"No cloud",hi:"Thick, dense"},
+  {id:"body",l:"Vapor Body/Mouthfeel",lo:"Thin, empty",hi:"Full, rich, substantial"},
+  {id:"draw_effort",l:"Draw Effort",lo:"Like breathing air",hi:"Very tight",trigger:{thresh:10,dir:"above",q:"What made the draw difficult?",opts:["Felt clogged","Airway too tight","Had to pull hard","Gurgling/flooding","Other"]}},
+  {id:"throat",l:"Throat Hit",lo:"Nothing",hi:"Very strong"},
+  {id:"harshness",l:"Harshness",lo:"Smooth",hi:"Coughing/burning",inv:true,trigger:{thresh:8,dir:"above",q:"What kind of harshness?",opts:["Burning throat","Coughing","Stinging lips","Irritating lungs","Chemical burn","Other"]}},
+  {id:"warmth",l:"Warmth at Lips",lo:"Cool",hi:"Uncomfortably hot",inv:true},
+  {id:"satisfaction",l:"Overall Satisfaction",lo:"Poor",hi:"Excellent",trigger:{thresh:5,dir:"below",q:"What was the main issue?",opts:["Bad flavor","Too harsh","Not enough vapor","Draw too tight","Burnt taste","Device felt cheap","Off-putting aftertaste","Other"]}}
+];
+
+var KO_PH=[
+  {id:"early",l:"Early (1-5s)",a:[{id:"ko_int_e",l:"Flavor Intensity",lo:"Absent",hi:"Strong"},{id:"ko_har_e",l:"Harshness",lo:"None",hi:"Severe",inv:true}]},
+  {id:"mid",l:"Mid (6-10s)",a:[{id:"ko_int_m",l:"Flavor Intensity",lo:"Absent",hi:"Strong"},{id:"ko_evo_m",l:"Flavor Evolution",lo:"Same as early",hi:"New notes"},{id:"ko_har_m",l:"Harshness",lo:"None",hi:"Severe",inv:true}]},
+  {id:"late",l:"Late (11-15s)",a:[{id:"ko_int_l",l:"Flavor Intensity",lo:"Gone",hi:"Still strong"},{id:"ko_off_l",l:"Off-Notes",lo:"None",hi:"Burnt/metallic",inv:true},{id:"ko_vap_l",l:"Vapor Consistency",lo:"Died",hi:"Still dense"}]}
+];
+var DEFS=["Burnt taste","Metallic taste","Chemical/solvent","Spit-back","Coughing","Hot mouthpiece","Gurgling","Weak/no vapor","Blocked draw","Leaking"];
+var EVO_OPTS=["Evolved - new notes appeared","Stayed the same","Faded - got weaker","Went bad at end"];
+var DISP_ATTRS=[
+  {id:"scr_read",l:"Screen Readability",lo:"Can not read",hi:"Crystal clear"},
+  {id:"scr_bright",l:"Brightness",lo:"Too dim",hi:"Too bright"},
+  {id:"batt_useful",l:"Battery Indicator",lo:"Useless",hi:"Very helpful"},
+  {id:"mode_clear",l:"Mode Indicator",lo:"Confusing",hi:"Instantly clear"},
+  {id:"ko_countdown",l:"KO Countdown During Draw",lo:"Cannot see mid-draw",hi:"Easy to read"},
+  {id:"puff_count",l:"Puff Counter",lo:"Do not care",hi:"Very useful"},
+  {id:"scr_overall",l:"Display Overall",lo:"Poor",hi:"Excellent"}
+];
+var OIL_LEVELS=["Full (just opened)","~75%","~50%","~25%","~10% (almost out)","Last few puffs"];
+var DRAW_ORDER=["lv1_sip","lv1_std","lv1_heavy","lv2_sip","lv2_std","lv2_heavy","ko"];
+
+// Steps: each has a type and optional config
+var STEPS=[
+  {id:"info",type:"info"},
+  {id:"lv1_sip",type:"draw",draw:"lv1_sip"},
+  {id:"r1",type:"rest",sec:60,next:"LV1 Standard Draw"},
+  {id:"lv1_std",type:"draw",draw:"lv1_std"},
+  {id:"r2",type:"rest",sec:60,next:"LV1 Heavy Hit"},
+  {id:"lv1_heavy",type:"draw",draw:"lv1_heavy"},
+  {id:"sw_lv2",type:"modeswitch",target:"LV2",targetColor:"#F1C40F",inst:"Press the button 3 times to switch to LV2. Your screen should turn YELLOW and show LV2.",sec:120},
+  {id:"lv2_sip",type:"draw",draw:"lv2_sip"},
+  {id:"r3",type:"rest",sec:60,next:"LV2 Standard Draw"},
+  {id:"lv2_std",type:"draw",draw:"lv2_std"},
+  {id:"r4",type:"rest",sec:60,next:"LV2 Heavy Hit"},
+  {id:"lv2_heavy",type:"draw",draw:"lv2_heavy"},
+  {id:"sw_ko",type:"modeswitch",target:"KO",targetColor:"#C0392B",inst:"Press the button 3 times to switch to KO Mode. Your screen should turn RED and show K.O.",sec:120},
+  {id:"ko_draw",type:"draw",draw:"ko"},
+  {id:"ko_time",type:"ko_time"},
+  {id:"display",type:"display"},
+  {id:"button",type:"button"},
+  {id:"defects",type:"defects"},
+  {id:"compare",type:"compare"},
+  {id:"final",type:"final"},
+  {id:"done",type:"done"}
+];
+
+var S={step:0,info:{name:"",ev:"",code:"",oil:"",oil_level:"",draw_count:"",preheat:""},sc:{},nt:{},df:{},rk:{draws:["","","","","","",""],codes:["","","",""],why:""},pu:{buy:"",cmp:"",chg:""},btn_ease:null,btn_misfire:"",timers:{},fu:{}};
+var activeTimer=null,lc=parseInt(localStorage.getItem("glc")||"0");
+
+// Save/Resume
+function saveP(){var sv=JSON.parse(JSON.stringify(S));localStorage.setItem("gl_wip",JSON.stringify(sv))}
+function loadP(){try{var d=JSON.parse(localStorage.getItem("gl_wip"));if(d&&d.step>0&&d.step<STEPS.length-1)return d}catch(e){}return null}
+function clearP(){localStorage.removeItem("gl_wip")}
+function resumeS(){var d=loadP();if(d){S=d;if(!S.fu)S.fu={};if(!S.timers)S.timers={};R()}}
+function discardS(){clearP();R()}
+function pauseS(){saveP();document.getElementById("toast").innerHTML="<div class='saved-toast'>Progress saved - come back anytime</div>";setTimeout(function(){document.getElementById("toast").innerHTML=""},2500)}
+
+// Follow-up modals
+var pendFU=[],curFU=null;
+function checkFU(drawId,cb){
+  pendFU=[];
+  ATTRS.forEach(function(a){if(!a.trigger)return;var k=drawId+"_"+a.id,v=S.sc[k];if(v==null)return;
+  var t=a.trigger;if((t.dir==="above"&&v>=t.thresh)||(t.dir==="below"&&v<=t.thresh))pendFU.push({key:k,attr:a,did:drawId,val:v})});
+  window._fuCb=cb;showFU();
+}
+function showFU(){
+  if(!pendFU.length){document.getElementById("modal").innerHTML="";if(window._fuCb)window._fuCb();return}
+  curFU=pendFU.shift();var f=curFU,t=f.attr.trigger,d=DRAWS[f.did];
+  if(!S.fu[f.key])S.fu[f.key]={opts:[],text:""};var sel=S.fu[f.key];
+  var dn=d?d.mode+" "+d.type:f.did;
+  var h="<div class='modal-bg'><div class='modal'><h3>"+t.q+"</h3>";
+  h+="<p class='mhint'>You scored "+f.attr.l+" at "+f.val.toFixed(1)+" on "+dn+". Tap all that apply.</p>";
+  t.opts.forEach(function(o){h+="<span class='mpill"+(sel.opts.indexOf(o)>=0?" on":"")+"' onclick=\"togFU(&quot;"+o+"&quot;)\">"+o+"</span>"});
+  h+="<textarea placeholder='Any detail...' oninput='fuTx(this.value)'>"+sel.text+"</textarea>";
+  h+="<button class='mbtn' onclick='dismissFU()'>Got it</button></div></div>";
+  document.getElementById("modal").innerHTML=h;
+}
+function togFU(o){var a=S.fu[curFU.key].opts,i=a.indexOf(o);if(i>=0)a.splice(i,1);else a.push(o);pendFU.unshift(curFU);showFU()}
+function fuTx(v){S.fu[curFU.key].text=v}
+function dismissFU(){document.getElementById("modal").innerHTML="";showFU()}
+
+// Draw timer
+function startDrawTimer(drawId){
+  var d=DRAWS[drawId];if(!d)return;
+  S.timers[drawId]={running:true,sec:d.sec,done:false};
+  R();
+  activeTimer=setInterval(function(){
+    S.timers[drawId].sec--;
+    if(S.timers[drawId].sec<=0){clearInterval(activeTimer);activeTimer=null;S.timers[drawId].running=false;S.timers[drawId].done=true;timerDone(drawId)}
+    R();
+  },1000);
+}
+// Rest/mode switch timer
+function startRestTimer(){
+  var st=STEPS[S.step];
+  S.timers[st.id]={running:true,sec:st.sec,done:false};R();
+  activeTimer=setInterval(function(){
+    S.timers[st.id].sec--;
+    if(S.timers[st.id].sec<=0){clearInterval(activeTimer);activeTimer=null;S.timers[st.id].running=false;S.timers[st.id].done=true}
+    R();
+  },1000);
+}
+function skipRest(){var st=STEPS[S.step];if(activeTimer)clearInterval(activeTimer);activeTimer=null;S.timers[st.id]={running:false,sec:0,done:true};R()}
+
+// Core helpers
+function mkSl(pfx,a){
+  var k=pfx+"_"+a.id,v=S.sc[k],val=v!=null?v:7.5,p=(val/15)*100,c=a.inv?"var(--red)":"var(--green)";
+  return "<div class='sg'><div class='sh'><span class='sn'>"+a.l+"</span><span class='sv'>"+(v!=null?v.toFixed(1):"-")+"</span></div><div class='sw'><input type='range' min='0' max='15' step='0.1' value='"+val+"' style='background:linear-gradient(to right,"+c+" 0%,"+c+" "+p+"%,#ddd "+p+"%,#ddd 100%)' oninput=\"sc(&quot;"+k+"&quot;,parseFloat(this.value));usl(this,"+(a.inv||false)+")\"></div><div class='sa'><span>"+a.lo+"</span><span>"+a.hi+"</span></div></div>";
+}
+function usl(e,inv){var p=(e.value/15)*100,c=inv?"var(--red)":"var(--green)";e.style.background="linear-gradient(to right,"+c+" 0%,"+c+" "+p+"%,#ddd "+p+"%,#ddd 100%)"}
+function pl(g,v,l){
+  var act=false;
+  if(g==="oil")act=S.info.oil===v;else if(g==="buy")act=S.pu.buy===v;else if(g==="cmp")act=S.pu.cmp===v;
+  else if(g==="ko_evo")act=S.nt.ko_evolution===v;else if(g==="oil_level")act=S.info.oil_level===v;
+  else if(g==="scr_ko_read")act=S.nt.scr_ko_read===v;else if(g==="preheat")act=S.info.preheat===v;
+  else if(g==="btn_misfire")act=S.btn_misfire===v;
+  else if(g.indexOf("str_")===0)act=S.nt[g]===v;
+  return "<span class='pill"+(act?" on":"")+"' onclick=\"spl(&quot;"+g+"&quot;,&quot;"+v+"&quot;)\">"+(l||v)+"</span>";
+}
+function spl(g,v){
+  if(g==="oil")S.info.oil=v;else if(g==="buy")S.pu.buy=v;else if(g==="cmp")S.pu.cmp=v;
+  else if(g==="ko_evo")S.nt.ko_evolution=v;else if(g==="oil_level")S.info.oil_level=v;
+  else if(g==="scr_ko_read")S.nt.scr_ko_read=v;else if(g==="preheat")S.info.preheat=v;
+  else if(g==="btn_misfire")S.btn_misfire=v;
+  else if(g.indexOf("str_")===0)S.nt[g]=v;R();
+}
+function sc(k,v){S.sc[k]=v}
+function si(f,v){S.info[f]=v}
+function sn(f,v){S.nt[f]=v}
+function srd(i,v){S.rk.draws[i]=v}
+function src(i,v){S.rk.codes[i]=v}
+function srw(v){S.rk.why=v}
+function spf(f,v){S.pu[f]=v}
+function sbe(v){S.btn_ease=v}
+function tdf(d){S.df[d]=!S.df[d];R()}
+
+function canNext(){
+  var st=STEPS[S.step];
+  if(st.type==="info")return S.info.name&&S.info.ev&&S.info.code&&S.info.oil&&S.info.oil_level;
+  if(st.type==="draw"){var t=S.timers[st.draw];return t&&t.done}
+  if(st.type==="rest"||st.type==="modeswitch"){var t2=S.timers[st.id];return t2&&t2.done}
+  return true;
+}
+function sipDone(drawId){S.timers[drawId]={done:true};initScores(drawId);R()}
+function timerDone(drawId){initScores(drawId)}
+function initScores(drawId){
+  ATTRS.forEach(function(a){var k=drawId+"_"+a.id;if(S.sc[k]==null)S.sc[k]=7.5});
+}
+
+function nx(){
+  var st=STEPS[S.step];
+  if(st.type==="draw"){
+    checkFU(st.draw,function(){S.step++;saveP();R();scrollTo(0,0)});
+    return;
+  }
+  S.step++;saveP();R();scrollTo(0,0);
+}
+function pv(){if(activeTimer){clearInterval(activeTimer);activeTimer=null}S.step--;saveP();R();scrollTo(0,0)}
+
+// Build data row
+function bRow(){
+  var c=S.sc,n=S.nt,i=S.info,p=S.pu,r=S.rk,fu=S.fu;
+  var row=[new Date().toISOString(),i.name,i.ev,i.code,i.oil,i.oil_level,i.draw_count,i.preheat];
+  DRAW_ORDER.forEach(function(did){
+    ATTRS.forEach(function(a){var k=did+"_"+a.id;row.push(c[k]!=null?c[k]:"");
+      if(a.trigger){row.push(fu[k]?(fu[k].opts||[]).join(", "):"");row.push(fu[k]?fu[k].text||"":"")}});
+    row.push(c[did+"_smooth_check"]!=null?c[did+"_smooth_check"]:"");
+    row.push(n["str_"+did]||"");
+    row.push(n[did+"_notes"]||"");
+  });
+  row.push(n.ko_actual_sec||"");
+  KO_PH.forEach(function(ph){ph.a.forEach(function(a){row.push(c[a.id]!=null?c[a.id]:"")});row.push(n[ph.id]||"")});
+  row.push(n.ko_evolution||"");
+  DISP_ATTRS.forEach(function(a){row.push(c["disp_"+a.id]!=null?c["disp_"+a.id]:"")});
+  row.push(n.scr_ko_read||"",n.display_notes||"");
+  row.push(S.btn_ease!=null?S.btn_ease:"",S.btn_misfire||"",n.btn_notes||"");
+  row.push(Object.keys(S.df).filter(function(k){return S.df[k]}).join("; "),n.defect_notes||"");
+  r.draws.forEach(function(d){row.push(d||"")});
+  r.codes.forEach(function(d){row.push(d||"")});
+  row.push(r.why||"",p.buy||"",p.cmp||"",p.chg||"",n.final_comments||"");
+  return row;
+}
+
+async function sub(){
+  var row=bRow();
+  var bk=JSON.parse(localStorage.getItem("gl_bk")||"[]");bk.push(row);localStorage.setItem("gl_bk",JSON.stringify(bk));
+  if(SHEETS_URL!=="https://script.google.com/macros/s/AKfycbzHzb2Di1QFODfKkHZ2k9DitFAoMEWh9oZGW-MnSexwoH8fOhI_BCQ1N3JT8VEDsQI_/exec"){
+    try{await fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({row:row})});S.ss="ok"}catch(e){S.ss="error"}
+  }else{S.ss="offline"}
+  lc++;localStorage.setItem("glc",lc);clearP();S.step=STEPS.length-1;R();scrollTo(0,0);
+}
+
+function rst(){
+  S={step:0,info:{name:S.info.name,ev:S.info.ev,code:"",oil:S.info.oil,oil_level:"",draw_count:"",preheat:""},sc:{},nt:{},df:{},rk:{draws:["","","","","","",""],codes:["","","",""],why:""},pu:{buy:"",cmp:"",chg:""},btn_ease:null,btn_misfire:"",timers:{},fu:{}};
+  if(activeTimer){clearInterval(activeTimer);activeTimer=null}clearP();R();scrollTo(0,0);
+}
+
+function exp(){
+  var sv=JSON.parse(localStorage.getItem("gl_bk")||"[]");if(!sv.length){alert("No data.");return}
+  var hd=["Timestamp","Name","Evaluator","Code","Oil","OilLevel","TotalDraws","PreheatUsed"];
+  var modeLabels=["LV1_Sip","LV1_Std","LV1_Heavy","LV2_Sip","LV2_Std","LV2_Heavy","KO"];
+  modeLabels.forEach(function(ml){ATTRS.forEach(function(a){hd.push(ml+"_"+a.l);if(a.trigger){hd.push(ml+"_"+a.l+"_Detail",ml+"_"+a.l+"_Comment")}});hd.push(ml+"_SmoothCheck",ml+"_StrengthCheck",ml+"_Notes")});
+  hd.push("KO_ActualSeconds");
+  KO_PH.forEach(function(ph){ph.a.forEach(function(a){hd.push("KOT_"+a.l)});hd.push("KOT_"+ph.l+"_Notes")});
+  hd.push("KO_Evolution");DISP_ATTRS.forEach(function(a){hd.push("Disp_"+a.l)});
+  hd.push("Screen_KO_Read","Display_Notes","Button_Ease","Button_Misfire","Button_Notes","Defects","DefectNotes");
+  for(var i=0;i<7;i++)hd.push("DrawRank"+(i+1));for(var j=0;j<4;j++)hd.push("CodeRank"+(j+1));
+  hd.push("RankWhy","WouldBuy","VsCurrent","WouldChange","Comments");
+  var rows=[hd].concat(sv);
+  var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var b=new Blob([csv],{type:"text/csv"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="golden_lungs_v3_data.csv";a.click();URL.revokeObjectURL(a.href);
+}
+
+function fmtTime(s){var m=Math.floor(s/60),sec=s%60;return m+":"+(sec<10?"0":"")+sec}
+
+// Draw score screen
+function drawHTML(drawId){
+  var d=DRAWS[drawId],t=S.timers[drawId]||{};
+  var isSip=d.type==="Sip";
+  var isKO=drawId==="ko";
+  var h="<div class='card'>";
+  h+="<div class='draw-badge' style='background:"+d.color+";color:#fff'>"+d.type+" - "+(isSip?"3-4 quick puffs":d.sec+"s")+"</div>";
+  h+="<span class='mode-badge' style='background:"+d.modeBg+";color:#fff'>"+d.mode+"</span>";
+  h+="<div class='draw-inst'>"+d.inst+"</div>";
+  // Timer - sips skip the countdown, just confirm
+  if(isSip){
+    if(!t.done){
+      h+="<div class='timer-box'><p style='font-size:14px;color:#666;margin-bottom:12px'>Take 3-4 quick sips now, then tap below when done</p>";
+      h+="<button class='btn btn-p' style='width:auto;padding:14px 36px;font-size:16px;flex:none' onclick=\"sipDone(&quot;"+drawId+"&quot;)\">Done - Score My Sips</button></div>";
+    }else{
+      h+="<div class='timer-box' style='background:#E8F8EE;border:2px solid var(--green)'><div style='font-size:16px;font-weight:700;color:var(--green)'>Score your sip experience below</div></div>";
+      h+="<h3>Flavor</h3>";ATTRS.slice(0,5).forEach(function(a){h+=mkSl(drawId,a)});
+      h+="<h3>Vapor and Sensation</h3>";ATTRS.slice(5).forEach(function(a){h+=mkSl(drawId,a)});
+      h+="<label class='lbl'>Flavor notes - what did you taste?</label>";
+      h+="<textarea oninput=\"sn(&quot;"+drawId+"_notes&quot;,this.value)\" placeholder='Describe...'>"+(S.nt[drawId+"_notes"]||"")+"</textarea>";
+      h+="<div class='sep'></div><h3>Quick Check</h3>";
+      h+=mkSl(drawId,{id:"smooth_check",l:"How smooth was this overall?",lo:"Very rough",hi:"Perfectly smooth"});
+      h+="<label class='lbl'>Was the flavor strong enough?</label><div class='pills'>"+["Too weak","Just right","Too strong"].map(function(o){return pl("str_"+drawId,o)}).join("")+"</div>";
+    }
+  }else{
+    // Standard/Heavy/KO timer
+    if(!t.done&&!t.running){
+      h+="<div class='timer-box'><p style='font-size:14px;color:#666;margin-bottom:12px'>Tap to start your "+(isKO?"KO":d.sec+"-second")+" draw"+(isKO?"<br><b>Stop whenever you hit your limit - note the second</b>":"")+"</p>";
+      h+="<button class='btn btn-p' style='width:auto;padding:14px 36px;font-size:18px;flex:none' onclick='startDrawTimer(\""+drawId+"\")'>START "+d.sec+"s DRAW</button></div>";
+    }else if(t.running){
+      var sec=t.sec,total=d.sec,pct=((total-sec)/total)*100;
+      var phase="",pcol=d.color;
+      if(isKO){phase=sec>(total-5)?"EARLY":sec>5?"MID":"LATE";pcol=sec>(total-5)?"var(--green)":sec>5?"var(--accent)":"var(--orange)"}
+      h+="<div class='timer-box'><div class='timer-big'>"+sec+"</div>";
+      if(phase)h+="<div class='timer-ph' style='color:"+pcol+"'>"+phase+"</div>";
+      h+="<div class='timer-bar'><div class='timer-fill' style='width:"+pct+"%;background:"+pcol+";transition:width 1s linear'></div></div>";
+      if(isKO)h+="<p style='font-size:12px;color:#999;margin-top:8px'>Stop when you need to - it is OK</p>";
+      h+="</div>";
+    }else{
+      h+="<div class='timer-box' style='background:#E8F8EE;border:2px solid var(--green)'><div style='font-size:16px;font-weight:700;color:var(--green)'>Draw complete - score it below</div></div>";
+      if(isKO){
+        h+="<label class='lbl'>How many seconds did you actually draw? (15 if full)</label>";
+        h+="<input type='number' value='"+(S.nt.ko_actual_sec||"")+"' oninput=\"sn(&quot;ko_actual_sec&quot;,this.value)\" placeholder='e.g. 15, 12, 8'>";
+      }
+      h+="<h3>Flavor</h3>";ATTRS.slice(0,5).forEach(function(a){h+=mkSl(drawId,a)});
+      h+="<h3>Vapor and Sensation</h3>";ATTRS.slice(5).forEach(function(a){h+=mkSl(drawId,a)});
+      h+="<label class='lbl'>Flavor notes - what did you taste?</label>";
+      h+="<textarea oninput=\"sn(&quot;"+drawId+"_notes&quot;,this.value)\" placeholder='Describe...'>"+(S.nt[drawId+"_notes"]||"")+"</textarea>";
+      h+="<div class='sep'></div><h3>Quick Check</h3>";
+      h+=mkSl(drawId,{id:"smooth_check",l:"How smooth was this overall?",lo:"Very rough",hi:"Perfectly smooth"});
+      h+="<label class='lbl'>Was the flavor strong enough?</label><div class='pills'>"+["Too weak","Just right","Too strong"].map(function(o){return pl("str_"+drawId,o)}).join("")+"</div>";
+    }
+  }
+  h+="</div>";return h;
+}
+
+function R(){
+  var st=STEPS[S.step],cur=st.type;
+  var pct=(S.step/(STEPS.length-1))*100;
+  document.getElementById("pfill").style.width=pct+"%";
+  document.getElementById("pbar").style.display=(S.step>0&&cur!=="done")?"block":"none";
+  var ctx="";
+  if(S.info.code&&S.info.oil&&S.step>0&&cur!=="done"){ctx="<div class='ctx'>"+S.info.code+" | "+S.info.oil+" | "+(S.info.oil_level||"?")+"</div>"}
+  document.getElementById("hctx").innerHTML=ctx;
+  var h="";
+
+  if(cur==="info"){
+    var saved=loadP(),rb="";
+    if(saved){rb="<div class='resume-bar'><p style='font-size:14px;color:#555;margin-bottom:10px'>Saved session in progress<br><b>Code: "+saved.info.code+" | Step "+(saved.step+1)+"/"+STEPS.length+"</b></p><button class='btn btn-p' style='flex:none;width:100%;margin-bottom:6px' onclick='resumeS()'>Resume</button><button class='btn btn-b' style='flex:none;width:100%' onclick='discardS()'>Start Fresh</button></div>"}
+    h=rb+"<div class='card'><h2>Session Info</h2><p class='hint'>You will evaluate 7 draws on this device: 3 at LV1, 3 at LV2, then KO. About 25 minutes with short rest breaks built in. <b>You can hit Pause anytime for a longer break</b> - the app saves your progress.</p>";
+    h+="<label class='lbl'>Your Name (required)</label><input type='text' value='"+S.info.name+"' oninput=\"si(&quot;name&quot;,this.value)\" placeholder='First and last name'>";
+    h+="<label class='lbl'>Evaluator ID</label><input type='text' value='"+S.info.ev+"' oninput=\"si(&quot;ev&quot;,this.value)\" placeholder='e.g. GL-01'>";
+    h+="<label class='lbl'>Device Code (on the label)</label><input type='text' value='"+S.info.code+"' oninput=\"si(&quot;code&quot;,this.value)\" placeholder='e.g. A, B, C'>";
+    h+="<label class='lbl'>Oil Line</label><div class='pills'>"+["Loud","Twisted","Fire"].map(function(o){return pl("oil",o)}).join("")+"</div>";
+    h+="<label class='lbl'>Oil Level (look at the window)</label><div class='pills'>"+OIL_LEVELS.map(function(o){return pl("oil_level",o)}).join("")+"</div>";
+    h+="<label class='lbl'>Total draws taken on this device (including casual)</label><input type='number' value='"+S.info.draw_count+"' oninput=\"si(&quot;draw_count&quot;,this.value)\" placeholder='e.g. 0, 5, 20'>";
+    h+="<label class='lbl'>Did you use preheat before this session?</label><div class='pills'>"+["Yes","No","Not sure"].map(function(o){return pl("preheat",o)}).join("")+"</div>";
+    h+="<p class='hint' style='margin-top:4px'>Make sure your device is on LV1 (screen shows BLUE). If not, press button 3x until it does.</p></div>";
+  }
+
+  else if(cur==="draw"){h=drawHTML(st.draw)}
+
+  else if(cur==="rest"){
+    var rt=S.timers[st.id]||{};
+    h="<div class='card'>";
+    if(!rt.running&&!rt.done){
+      h+="<div class='rest-box'><h2 style='color:var(--gold)'>Palate Rest - 1 Minute</h2><div class='rest-inst'>Before your next draw:<br><b>1.</b> Drink some water<br><b>2.</b> Breathe fresh air for a moment<br><b>3.</b> Let your palate reset</div>";
+      h+="<p style='margin-top:12px;font-size:13px;color:#999'>Next up: "+st.next+"</p>";
+      h+="<button class='btn btn-p' style='width:auto;padding:12px 30px;font-size:16px;flex:none;margin-top:12px' onclick='startRestTimer()'>Start 1-Min Rest</button></div>";
+    }else if(rt.running){
+      h+="<div class='rest-box'><div class='rest-big'>"+fmtTime(rt.sec)+"</div><div class='rest-inst'>Drink water. Breathe fresh air.<br>Next: "+st.next+"</div>";
+      h+="<button style='margin-top:12px;padding:8px 16px;font-size:12px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#999;cursor:pointer;font-family:inherit' onclick='skipRest()'>Skip rest (not recommended)</button></div>";
+    }else{
+      h+="<div class='rest-box' style='background:#E8F8EE;border-color:var(--green)'><div style='font-size:18px;font-weight:700;color:var(--green)'>Rest complete - ready for "+st.next+"</div></div>";
+    }
+    h+="</div>";
+  }
+
+  else if(cur==="modeswitch"){
+    var mt=S.timers[st.id]||{};
+    h="<div class='card'>";
+    if(!mt.running&&!mt.done){
+      h+="<div class='mode-sw'><h2 style='color:var(--accent)'>Mode Switch - 2 Minute Break</h2>";
+      h+="<div style='margin:14px 0;padding:14px;background:#fff;border-radius:8px;border:2px dashed "+st.targetColor+";font-size:15px;line-height:1.6;color:#444'>"+st.inst+"</div>";
+      h+="<div class='rest-inst'>While you wait:<br><b>1.</b> Drink water and cleanse your palate<br><b>2.</b> Step outside for fresh air<br><b>3.</b> Switch your device mode now</div>";
+      h+="<button class='btn btn-p' style='width:auto;padding:12px 30px;font-size:16px;flex:none;margin-top:12px' onclick='startRestTimer()'>Start 2-Min Break</button></div>";
+    }else if(mt.running){
+      h+="<div class='mode-sw'><div class='rest-big' style='color:var(--accent)'>"+fmtTime(mt.sec)+"</div>";
+      h+="<div class='rest-inst'>Switch to "+st.target+" now if you have not already.<br>Drink water. Breathe fresh air.</div>";
+      h+="<button style='margin-top:12px;padding:8px 16px;font-size:12px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#999;cursor:pointer;font-family:inherit' onclick='skipRest()'>Skip (not recommended)</button></div>";
+    }else{
+      h+="<div class='mode-sw' style='background:#E8F8EE;border-color:var(--green)'><div style='font-size:18px;font-weight:700;color:var(--green)'>Break complete</div>";
+      h+="<p style='font-size:14px;color:#666;margin-top:8px'>Confirm: is your device showing <b>"+st.target+"</b>?</p></div>";
+    }
+    h+="</div>";
+  }
+
+  else if(cur==="ko_time"){
+    h="<div class='card'><h2>KO Time-Intensity</h2><p class='hint'>Score how the KO draw felt at each phase.</p>";
+    KO_PH.forEach(function(ph){h+="<h3>"+ph.l+"</h3>";ph.a.forEach(function(a){h+=mkSl("",a)});
+      h+="<label class='lbl'>Flavor during "+ph.l.toLowerCase()+":</label><input type='text' value='"+(S.nt[ph.id]||"")+"' oninput=\"sn(&quot;"+ph.id+"&quot;,this.value)\" placeholder='What did you taste?'>"});
+    h+="<div class='sep'></div><label class='lbl'>Did the flavor evolve or just fade?</label><div class='pills'>"+EVO_OPTS.map(function(o){return pl("ko_evo",o)}).join("")+"</div></div>";
+  }
+
+  else if(cur==="display"){
+    h="<div class='card'><h2>Display and Screen</h2><p class='hint'>Score the OLED display features.</p>";
+    DISP_ATTRS.forEach(function(a){h+=mkSl("disp",a)});
+    h+="<label class='lbl'>Could you read the screen during a KO draw?</label><div class='pills'>"+["Yes easily","Barely","No could not see","Did not try"].map(function(o){return pl("scr_ko_read",o)}).join("")+"</div>";
+    h+="<label class='lbl'>What would you change about the display?</label><textarea oninput=\"sn(&quot;display_notes&quot;,this.value)\" placeholder='Anything...'>"+(S.nt.display_notes||"")+"</textarea></div>";
+  }
+
+  else if(cur==="button"){
+    h="<div class='card'><h2>Button and Mode Switching</h2><p class='hint'>You switched modes during this session. How was it?</p>";
+    h+=mkSl("btn",{id:"ease",l:"Mode Switching Ease",lo:"Very confusing",hi:"Effortless"});
+    h+="<label class='lbl'>Did you accidentally trigger the wrong mode?</label><div class='pills'>"+["Yes","No"].map(function(o){return pl("btn_misfire",o)}).join("")+"</div>";
+    h+="<label class='lbl'>Any issues with the button?</label><textarea oninput=\"sn(&quot;btn_notes&quot;,this.value)\" placeholder='Anything...'>"+(S.nt.btn_notes||"")+"</textarea></div>";
+  }
+
+  else if(cur==="defects"){
+    h="<div class='card'><h2>Defect Check</h2><p class='hint'>Across ALL 7 draws - tap any defect noticed at any point.</p>";
+    DEFS.forEach(function(d){var f=S.df[d];h+="<div class='di"+(f?" on":"")+"' onclick=\"tdf(&quot;"+d+"&quot;)\"><div class='dk'>"+(f?"\u2713":"")+"</div><span>"+d+"</span></div>"});
+    h+="<label class='lbl'>Other defects:</label><textarea oninput=\"sn(&quot;defect_notes&quot;,this.value)\" placeholder='Anything?'>"+(S.nt.defect_notes||"")+"</textarea></div>";
+  }
+
+  else if(cur==="compare"){
+    h="<div class='card'><h2>Draw Comparison</h2><p class='hint'>Rank all 7 draws on code "+S.info.code+" from best (1) to worst (7).</p>";
+    ["LV1 Sip","LV1 Standard","LV1 Heavy","LV2 Sip","LV2 Standard","LV2 Heavy","KO"].forEach(function(d,i){
+      h+="<div class='rr'><input type='text' style='flex:0 0 26px;margin:0;text-align:center;padding:8px 4px;font-weight:700;font-size:14px' value='"+S.rk.draws[i]+"' oninput='srd("+i+",this.value)' placeholder='"+(i+1)+"'><span style='font-size:13px;font-weight:600;color:var(--navy)'>"+d+"</span></div>"});
+    h+="<div class='sep'></div><h2>Code Comparison</h2><p class='hint'>Tested multiple codes? Rank best to worst.</p>";
+    [0,1,2,3].forEach(function(i){
+      var bg=i===0?"var(--green)":"var(--light)",cl=i===0?"#fff":"var(--navy)",lb=i===0?"(best)":i===3?"(worst)":"";
+      h+="<div class='rr'><div class='rn' style='background:"+bg+";color:"+cl+"'>"+(i+1)+"</div><input type='text' style='flex:1;margin:0' value='"+S.rk.codes[i]+"' oninput='src("+i+",this.value)' placeholder='Code "+lb+"'></div>"});
+    h+="<label class='lbl'>Why is #1 the best?</label><textarea oninput='srw(this.value)' placeholder='One sentence...'>"+(S.rk.why||"")+"</textarea></div>";
+  }
+
+  else if(cur==="final"){
+    h="<div class='card'><h2>Final Questions</h2>";
+    h+="<label class='lbl'>Would you buy this product?</label><div class='pills'>"+["Definitely","Probably","Maybe","Probably Not","Definitely Not"].map(function(o){return pl("buy",o)}).join("")+"</div>";
+    h+="<label class='lbl'>Compared to your current Jefe Plus:</label><div class='pills'>"+["Much Better","Somewhat Better","Same","Somewhat Worse","Much Worse","Never used original"].map(function(o){return pl("cmp",o)}).join("")+"</div>";
+    h+="<label class='lbl'>What one thing would you change?</label><textarea oninput=\"spf(&quot;chg&quot;,this.value)\" placeholder='Anything...'>"+S.pu.chg+"</textarea>";
+    h+="<label class='lbl'>Any other comments:</label><textarea oninput=\"sn(&quot;final_comments&quot;,this.value)\" placeholder='Anything...'>"+(S.nt.final_comments||"")+"</textarea></div>";
+  }
+
+  else if(cur==="done"){
+    var sts="";
+    if(S.ss==="ok")sts="<div class='sts sts-ok'>Data sent automatically</div>";
+    else if(S.ss==="offline")sts="<div class='sts sts-err'>Saved locally - tap Export</div>";
+    else if(S.ss==="error")sts="<div class='sts sts-err'>Network error - saved locally</div>";
+    h="<div class='card' style='text-align:center;padding:28px 18px'><div style='font-size:48px;margin-bottom:6px'>\u2713</div><div style='font-size:20px;font-weight:700;color:var(--green)'>Code "+S.info.code+" Complete</div><p style='font-size:14px;color:#666;margin:6px 0'>"+lc+" evaluation"+(lc!==1?"s":"")+" total.</p>"+sts;
+    h+="<button class='btn btn-p' style='width:100%;margin-top:16px;flex:none' onclick='rst()'>Evaluate Next Code</button>";
+    h+="<button class='btn' style='width:100%;background:var(--light);color:var(--navy);margin-top:8px;flex:none' onclick='exp()'>Export Backup (CSV)</button></div>";
+  }
+
+  document.getElementById("ct").innerHTML=h;
+
+  // Nav
+  var nav="";
+  if(cur!=="done"){
+    if(S.step>0&&cur!=="rest"&&cur!=="modeswitch"){nav+="<button class='btn btn-b' onclick='pv()'>Back</button>";nav+="<button class='btn btn-pause' onclick='pauseS()'>Pause</button>"}
+    if(cur==="final")nav+="<button class='btn btn-s' onclick='sub()'>Submit</button>";
+    else if(cur==="rest"||cur==="modeswitch"){if(canNext())nav+="<button class='btn btn-p' style='flex:none;width:100%' onclick='nx()'>Continue</button>"}
+    else nav+="<button class='btn btn-p' "+(canNext()?"":"disabled")+" onclick='nx()'>Next</button>";
+  }
+  document.getElementById("nav").innerHTML=nav;
+}
+R();
+</script>
+</body>
+</html>
